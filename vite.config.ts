@@ -7,15 +7,27 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      strategies: "generateSW",
-      filename: "sw.js",
-      registerType: "autoUpdate",
-      injectRegister: null,
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      pwaAssets: {
+        disabled: true,
+      },
       manifest: false,
-      devOptions: { enabled: false },
       workbox: {
-        navigateFallback: null,
-        globPatterns: ["**/*.{js,css,png,svg,jpg,woff2}"],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/.*$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pwa-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dní
+              },
+            },
+          },
+        ],
       },
     }),
   ],
